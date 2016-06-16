@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>2-2</title>
+</head>
+<body>
+	<!--使用ajax從後台抓出資料-->
+	<form >
+		<select name="YourLocation1">
+			<option value="Taipei">台北市</option>
+			<option value="Tainan">台南市</option>
+			<option value="Kaohsiung">高雄市</option>
+		</select>
+		<select name="city">
+			
+		</select>
+	</form>
+
+	<form>
+		<select id="YourLocation2">
+    	<option></option>
+    </select>
+	</form>
+	<!--3-3題-->縣市+區域<input type="text" id="address"></br>
+	<!--加分題(需chrome可用)--><input type="button" value="下載">
+</body>
+<?php
+$mysqlhost="localhost";
+$mysqluser="rootphp";
+$mysqlpasswd="classforphp";
+
+// 建立資料庫連線
+$link =
+	@mysql_connect($mysqlhost, $mysqluser, $mysqlpasswd);
+if ($link == FALSE) {
+	echo "無法連上資料庫\n".mysql_error();
+	exit();
+}
+		
+mysql_query("set names utf8");
+$mysqldbname="2";
+mysql_select_db($mysqldbname);
+
+$shops = mysql_query("select * from area;");
+if(!$shops){
+   	echo "Execute SQL failed : ". mysql_error();
+	exit;
+}
+$shopCodeArr=array();     //用來存哪些選項的陣列
+$shopCount=0;
+while($rows=mysql_fetch_array($shops))
+{
+	$shopCodeArr[$shopCount]=$rows[shopCode];
+	$shopCount++;
+}
+for($i=0;$i<count($shopCodeArr);$i++)
+{
+	echo "<script type=\"text/javascript\">";
+	echo "document.getElementById(\"YourLocation2\").options[$i]=new Option(\"$shopCodeArr[$i]\",\"$shopCodeArr[$i]\")";
+	echo "</script>";
+}
+?>
+</html>
+
+
